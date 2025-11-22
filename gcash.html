@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="format-detection" content="telephone=no">
+    <title>GCash Receipt Complete - Secure</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- [CSS is Omitted for Brevity] --- */
+        /* All CSS from the previous step remains the same. */
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .phone-screen {
+            width: 90vw;
+            max-width: 390px;
+            aspect-ratio: 390 / 844;
+            height: auto;
+            background-color: #0074F2;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 80px rgba(0,0,0,0.7);
+        }
+
+        #lock-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0074F2;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+            color: white;
+        }
+
+        #lock-input {
+            width: 100%;
+            max-width: 250px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #002B5C;
+            font-weight: 600;
+        }
+
+        #unlock-btn {
+            width: 100%;
+            max-width: 250px;
+            background-color: white;
+            color: #0074F2;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        /* [Additional receipt and menu CSS styles are omitted here for brevity] */
+
+    </style>
+</head>
+<body>
+
+    <div class="phone-screen">
+        
+        <div id="lock-screen">
+            <i class="fa-solid fa-key"></i>
+            <h2>Exclusive Access Required</h2>
+            <p>Please enter your paid API Key to unlock the generator.</p>
+            <input type="text" id="lock-input" placeholder="Enter API Key">
+            <button id="unlock-btn">Unlock Tool</button>
+            <p id="error-message" style="color: #ffdddd; margin-top: 15px; font-size: 12px; display: none;">Invalid API Key or Service Error. Please try again.</p>
+        </div>
+        <div id="settings-menu" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #f0f0f0; z-index: 100; flex-direction: column; padding: 55px 20px 20px 20px; overflow-y: auto;">
+            <h2>Customize Receipt Details 🎨</h2>
+            <div class="input-group">
+                <label for="input-amount">Amount Sent (e.g., 50.00)</label>
+                <input type="number" id="input-amount" value="9000.00" step="0.01">
+            </div>
+
+            <div class="input-group">
+                <label for="input-name">Recipient Name (e.g., MA...A V.)</label>
+                <input type="text" id="input-name" value="SQ•••I F." maxlength="20">
+            </div>
+
+            <div class="input-group">
+                <label for="input-number">Recipient Number (e.g., +63 917 123 4567)</label>
+                <input type="text" id="input-number" value="+63 817 946 0091" maxlength="16">
+            </div>
+            
+            <div class="date-time-group" style="display: flex; gap: 10px;">
+                <div class="input-group" style="flex: 1;">
+                    <label for="input-date">Transaction Date</label>
+                    <input type="date" id="input-date" value="2025-11-22">
+                </div>
+                <div class="input-group" style="flex: 1;">
+                    <label for="input-time">Transaction Time</label>
+                    <input type="time" id="input-time" value="20:12">
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="input-ref">Reference Number (e.g., 8034900031861)</label>
+                <input type="text" id="input-ref" value="8034900031861" maxlength="15">
+            </div>
+
+            <button id="apply-btn">Apply Changes & Show Receipt</button>
+        </div>
+        <div id="receipt-content" style="display: none; flex: 1; flex-direction: column;">
+            <div class="header">
+                <h1 class="text-medium">Express Send</h1>
+                <div class="close-icon"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+
+            <div class="content-area">
+                <div class="card-wrapper">
+                    
+                    <div class="card-top">
+                        <div class="check-container">
+                            <div class="check-blue-circle">
+                                <svg class="custom-check-icon" viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div id="receipt-name" class="user-name display-semibold">SQ•••I F.</div>
+                        <div id="receipt-number" class="user-pill rounded-medium"><strong>+63 817 946 0091</strong></div>
+                        <div class="sent-text text-regular">Sent via GCash</div>
+
+                        <div class="divider"></div>
+
+                        <div class="row">
+                            <span class="label text-medium">Amount</span>
+                            <span id="receipt-amount" class="amount-text display-semibold">9000.00</span>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="row">
+                            <span class="total-label text-medium">Total Amount Sent</span>
+                            <span id="receipt-total" class="total-amount display-boldest">₱9000.00</span>
+                        </div>
+                    </div>
+
+                    <div class="card-bottom">
+                        
+                        <div class="ref-row">
+                            <span class="text-regular">Ref No. <b id="receipt-ref">8034900031861</b></span>
+                            <span id="receipt-datetime" class="text-regular"><b>Nov 22, 2025 08:12 PM</b></span>
+                        </div>
+
+                        <div class="spacer"></div>
+
+                        <div class="carbon-box">
+                            <div class="carbon-header">
+                                <i class="fa-solid fa-leaf"></i>
+                                <span class="text-medium">279g <span class="text-regular" style="font-size: 12px;">(gCO2e)</span></span>
+                            </div>
+                            <div class="carbon-text text-regular">
+                                By going digital, you reduce your carbon footprint from transportation, paper, and plastic.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sawtooth"></div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="footer-btn">
+                    <i class="fa-solid fa-download"></i>
+                    <span class="text-medium">Download</span>
+                </div>
+                <div class="footer-btn">
+                    <i class="fa-solid fa-share-nodes"></i>
+                    <span class="text-medium">Share Receipt</span>
+                </div>
+            </div>
+        </div>
+        </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            
+            // --- UI Elements ---
+            const lockScreen = document.getElementById('lock-screen');
+            const lockInput = document.getElementById('lock-input');
+            const unlockBtn = document.getElementById('unlock-btn');
+            const errorMessage = document.getElementById('error-message');
+
+            const settingsMenu = document.getElementById('settings-menu');
+            const receiptContent = document.getElementById('receipt-content');
+            const applyButton = document.getElementById('apply-btn');
+
+            // Input Fields and Receipt Elements remain the same...
+            const inputAmount = document.getElementById('input-amount');
+            const inputName = document.getElementById('input-name');
+            const inputNumber = document.getElementById('input-number');
+            const inputDate = document.getElementById('input-date');
+            const inputTime = document.getElementById('input-time');
+            const inputRef = document.getElementById('input-ref');
+
+            const receiptName = document.getElementById('receipt-name');
+            const receiptNumber = document.getElementById('receipt-number');
+            const receiptAmount = document.getElementById('receipt-amount');
+            const receiptTotal = document.getElementById('receipt-total');
+            const receiptRef = document.getElementById('receipt-ref');
+            const receiptDateTime = document.getElementById('receipt-datetime');
+            
+            // --- Initialization (Date/Time setting code is omitted for brevity. It remains the same.) ---
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            
+            inputDate.value = `${year}-${month}-${day}`;
+            inputTime.value = `${hours}:${minutes}`;
+
+
+            // --- Helper Functions (formatAmount, formatPhoneNumber, formatDateTime are omitted for brevity. They remain the same.) ---
+
+            const formatAmount = (value) => {
+                const number = parseFloat(value);
+                if (isNaN(number)) return '0.00';
+                return number.toFixed(2);
+            };
+
+            const formatPhoneNumber = (value) => {
+                let digits = value.replace(/[^\d]/g, '');
+                if (digits.length > 0 && !digits.startsWith('63')) {
+                    if (digits.startsWith('09')) {
+                        digits = '63' + digits.substring(1);
+                    } else if (digits.startsWith('9')) {
+                        digits = '63' + digits;
+                    } else if (digits.length >= 10 && !digits.startsWith('63')) {
+                         digits = '63' + digits.slice(digits.length - 10);
+                    }
+                }
+                digits = digits.substring(0, 12);
+                let formatted = '';
+                if (digits.length > 0) { formatted += '+' + digits.substring(0, 2); }
+                if (digits.length > 2) { formatted += ' ' + digits.substring(2, 5); }
+                if (digits.length > 5) { formatted += ' ' + digits.substring(5, 8); }
+                if (digits.length > 8) { formatted += ' ' + digits.substring(8, 12); }
+                return formatted;
+            };
+
+            const formatDateTime = (dateStr, timeStr) => {
+                if (!dateStr || !timeStr) return 'Date/Time Missing';
+                const [year, monthIndex, day] = dateStr.split('-').map(Number);
+                const [hour24, minute] = timeStr.split(':').map(Number);
+                const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                const monthName = monthNames[monthIndex - 1];
+                const ampm = hour24 >= 12 ? 'PM' : 'AM';
+                const hour12 = hour24 % 12 || 12;
+                const paddedMinute = String(minute).padStart(2, '0');
+                return `${monthName} ${day}, ${year} ${hour12}:${paddedMinute} ${ampm}`;
+            };
+
+
+            // --- NEW SECURE LOCK SCREEN LOGIC ---
+            const handleUnlock = async () => {
+                const enteredKey = lockInput.value.trim();
+                
+                if (!enteredKey) {
+                    errorMessage.textContent = 'Please enter your API Key.';
+                    errorMessage.style.display = 'block';
+                    return;
+                }
+                
+                // Show a loading state
+                unlockBtn.textContent = 'Verifying...';
+                unlockBtn.disabled = true;
+                errorMessage.style.display = 'none';
+
+                try {
+                    // ** STEP 3: Client sends the key to the Serverless Function **
+                    const response = await fetch('/api/validate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ key: enteredKey }),
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok && data.valid) {
+                        // ** Access Granted **
+                        lockScreen.style.display = 'none';
+                        settingsMenu.style.display = 'flex';
+                    } else {
+                        // ** Access Denied **
+                        errorMessage.textContent = 'Invalid API Key. Access Denied.';
+                        errorMessage.style.display = 'block';
+                        lockInput.value = '';
+                    }
+                } catch (error) {
+                    // Handle network or serverless function errors
+                    console.error('API Key validation failed:', error);
+                    errorMessage.textContent = 'Service Error. Could not connect to validation server.';
+                    errorMessage.style.display = 'block';
+                } finally {
+                    unlockBtn.textContent = 'Unlock Tool';
+                    unlockBtn.disabled = false;
+                }
+            };
+            
+            unlockBtn.addEventListener('click', handleUnlock);
+            lockInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    handleUnlock();
+                }
+            });
+
+
+            // --- Receipt Customization Logic (Remains the same as before) ---
+            
+            inputNumber.addEventListener('input', (e) => {
+                const cursorStart = e.target.selectionStart;
+                const oldValue = e.target.value;
+                const newFormattedValue = formatPhoneNumber(oldValue);
+
+                e.target.value = newFormattedValue;
+                
+                const newLength = newFormattedValue.length;
+                const oldLength = oldValue.length;
+                let newCursorPos = cursorStart + (newLength - oldLength);
+                
+                if (cursorStart === oldLength && newLength < oldLength) {
+                     newCursorPos = newLength;
+                }
+                
+                e.target.setSelectionRange(newCursorPos, newCursorPos);
+            });
+
+            applyButton.addEventListener('click', () => {
+                const newAmount = formatAmount(inputAmount.value);
+                const newName = inputName.value.toUpperCase().trim();
+                const newNumber = inputNumber.value.trim(); 
+                const newDateStr = inputDate.value;
+                const newTimeStr = inputTime.value;
+                const newRef = inputRef.value.trim();
+                const newFormattedDateTime = formatDateTime(newDateStr, newTimeStr);
+
+                if (!newAmount || !newName || !newNumber || !newDateStr || !newTimeStr || !newRef || newNumber.length < 16) {
+                    return;
+                }
+
+                receiptName.textContent = newName;
+                receiptNumber.querySelector('strong').textContent = newNumber;
+                receiptAmount.textContent = newAmount;
+                receiptTotal.textContent = '₱' + newAmount;
+                receiptRef.textContent = newRef;
+                receiptDateTime.querySelector('b').textContent = newFormattedDateTime;
+
+                settingsMenu.style.display = 'none';
+                receiptContent.style.display = 'flex'; 
+            });
+            
+            if (receiptDateTime.querySelector('b')) {
+                receiptDateTime.querySelector('b').textContent = formatDateTime(inputDate.value, inputTime.value);
+            }
+        });
+    </script>
+
+</body>
+</html>
